@@ -29,6 +29,7 @@ const getWeatherData = async (city: string) => {
 }
 
 const addUser = async (username: string, password: string) => {
+  console.log('in adduser');
   const existingUser: [] = await new Promise((resolve, reject) => {
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
       if (err) reject(err);
