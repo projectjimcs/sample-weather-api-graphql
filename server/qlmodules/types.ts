@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt } from 'graphql';
 import { getGeocodeData, getWeatherData } from './resolves';
 
 const GeocodeType = new GraphQLObjectType({
@@ -19,6 +19,16 @@ const WeatherType = new GraphQLObjectType({
     shortDesc: { type: GraphQLString },
     description: { type: GraphQLString },
     temp: { type: GraphQLFloat },
+  })
+});
+
+const UserType = new GraphQLObjectType({
+  name: "User",
+  description: 'The data in the user',
+  fields: () => ({
+    id: { type: GraphQLInt },
+    username: { type: GraphQLString },
+    password: { type: GraphQLString },
   })
 });
 
