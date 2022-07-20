@@ -3,6 +3,7 @@ import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql'
 import { RootQueryType } from './qlmodules/types';
 import { port } from './global';
+import { connection } from './config/dbconfig';
 
 const app: Express = express();
 
@@ -16,6 +17,13 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.get('/', async (req: Request, res: Response) => {
+  connection.query('SELECT * from `users`', (err, results, fields) => {
+    if (err) throw err;
+
+    console.log('The solution is: ', results);
+  })
+
+  connection.end();
   res.send('Hello World');
 });
 
