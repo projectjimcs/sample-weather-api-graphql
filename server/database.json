@@ -4,7 +4,6 @@
     "user": { "ENV" : "DB_USER" },
     "password": { "ENV" : "DB_PASSWORD" },
     "database": "qlsample",
-    "driver": "mysql",
-    "multipleStatements": true
+    "driver": "mysql"
   }
 }
