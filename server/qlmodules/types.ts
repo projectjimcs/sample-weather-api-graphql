@@ -1,4 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql'
+import { GraphQLObjectType, GraphQLString, GraphQLFloat } from 'graphql';
+import { getGeocodeData, getWeatherData } from './resolves';
 
 const GeocodeType = new GraphQLObjectType({
   name: 'Geocode',
@@ -15,9 +16,8 @@ const WeatherType = new GraphQLObjectType({
   name: 'Weather',
   description: 'Current weather of a given latitude and longitude',
   fields: () => ({
-    main: { type: GraphQLString },
+    shortDesc: { type: GraphQLString },
     description: { type: GraphQLString },
-    icon: { type: GraphQLString },
     temp: { type: GraphQLFloat },
   })
 });
@@ -27,9 +27,25 @@ const RootQueryType = new GraphQLObjectType({
   description: 'Root Query',
   fields: () => ({
     weather: {
-      type: GraphQLString,
-      description: 'What is the weather like?',
-      resolve: () => 'Weather here',
+      type: WeatherType,
+      description: 'Weather data given a latitude and longitude',
+      args: {
+        lat: { type: GraphQLFloat },
+        lon: { type: GraphQLFloat },
+      },
+      resolve: (parent, args) => {
+        return getWeatherData(args.lat, args.lon);
+      }
+    },
+    geocode: {
+      type: GeocodeType,
+      description: 'Geocode data for a given city',
+      args: {
+        city: { type: GraphQLString },
+      },
+      resolve: (parent, args) => {
+        return getGeocodeData(args.city);
+      },
     }
   })
 });
