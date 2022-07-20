@@ -1,15 +1,18 @@
 import express, { Express, Request, Response } from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql'
-import { RootQueryType } from './qlmodules/types';
+import { RootMutationType, RootQueryType } from './qlmodules/types';
 import { port } from './global';
-import { connection } from './config/dbconfig';
+import { authentication } from './middleware/auth';
 
 const app: Express = express();
 
 const schema: GraphQLSchema = new GraphQLSchema({
-  query: RootQueryType
-})
+  query: RootQueryType,
+  mutation: RootMutationType,
+});
+
+app.use(authentication);
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
@@ -17,13 +20,6 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.get('/', async (req: Request, res: Response) => {
-  connection.query('SELECT * from `users`', (err, results, fields) => {
-    if (err) throw err;
-
-    console.log('The solution is: ', results);
-  })
-
-  connection.end();
   res.send('Hello World');
 });
 

@@ -1,16 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt } from 'graphql';
-import { getGeocodeData, getWeatherData } from './resolves';
-
-const GeocodeType = new GraphQLObjectType({
-  name: 'Geocode',
-  description: 'Geocode data of a given city',
-  fields: () => ({
-    name: { type: GraphQLString },
-    lat: { type: GraphQLFloat },
-    lon: { type: GraphQLFloat },
-    country: { type: GraphQLString },
-  })
-});
+import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt, GraphQLNonNull } from 'graphql';
+import { getWeatherData, addUser, login } from './resolves';
 
 const WeatherType = new GraphQLObjectType({
   name: 'Weather',
@@ -28,7 +17,16 @@ const UserType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLInt },
     username: { type: GraphQLString },
-    password: { type: GraphQLString },
+  })
+});
+
+const AuthDataType = new GraphQLObjectType({
+  name: 'AuthData',
+  description: 'Authentication data of the user',
+  fields: () => ({
+    userId: { type: GraphQLInt },
+    token: { type: GraphQLString },
+    tokenExpiry: { type: GraphQLInt },
   })
 });
 
@@ -40,26 +38,49 @@ const RootQueryType = new GraphQLObjectType({
       type: WeatherType,
       description: 'Weather data given a latitude and longitude',
       args: {
-        lat: { type: GraphQLFloat },
-        lon: { type: GraphQLFloat },
+        city: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve: (parent, args) => {
-        return getWeatherData(args.lat, args.lon);
+      resolve: (parent, args, context) => {
+        if (!context.res.locals.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        return getWeatherData(args.city);
       }
     },
-    geocode: {
-      type: GeocodeType,
-      description: 'Geocode data for a given city',
+    login: {
+      type: AuthDataType,
+      description: 'Retrieved data from login',
       args: {
-        city: { type: GraphQLString },
+        username: { type: GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve: (parent, args) => {
-        return getGeocodeData(args.city);
+        return login(args.username, args.password);
       },
+    }
+  })
+});
+
+const RootMutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  description: 'Root Mutation',
+  fields: () => ({
+    addUser: {
+      type: UserType,
+      description: 'Add a user',
+      args: {
+        username: { type : GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (parent, args) => {
+        return addUser(args.username, args.password);
+      }
     }
   })
 });
 
 export {
   RootQueryType,
+  RootMutationType,
 };
