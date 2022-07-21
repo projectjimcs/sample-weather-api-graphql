@@ -25,8 +25,11 @@ function register(username: string, password: string) {
 
     return res.json();
   }).then(data => {
-    // Come back to handle errors here
-    console.log(data)
+    if (data.hasOwnProperty('errors')) {
+      return data.errors[0].message;
+    } else {
+      return 'success';
+    }
   }).catch(err => {
     // !!! Come back to handle errors
     console.log(err);
@@ -60,11 +63,14 @@ function login(username: string, password: string) {
 
     return res.json();
   }).then(data => {
-    // Come back to handle errors here
-    return {
-      userId: data.data.login.userId,
-      token: data.data.login.token,
-      tokenExpiry: data.data.login.tokenExpiry,
+    if (data.hasOwnProperty('errors')) {
+      return data.errors[0].message;
+    } else {
+      return {
+        userId: data.data.login.userId,
+        token: data.data.login.token,
+        tokenExpiry: data.data.login.tokenExpiry,
+      }
     }
   }).catch(err => {
     // !!! Come back to handle errors
@@ -179,8 +185,11 @@ function getWeather(city: string, token: string | undefined) {
 
     return res.json();
   }).then(data => {
-    // Come back to handle errors here
-    return data.data.weather;
+    if (data.hasOwnProperty('errors')) {
+      return data.errors[0].message;
+    } else {
+      return data.data.weather;
+    }
   }).catch(err => {
     // Come back to handle errors
     console.log(err);

@@ -4,10 +4,17 @@ import AuthCtx from '../../context/auth-context';
 import { useState, useContext } from 'react';
 import { getWeather } from '../../requests/requests';
 import WeatherInfoBlock from '../WeatherInfoBlock';
+import Modal from '../Modal';
 
 function WeatherDisplay(props: any) {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null)
+
+  const [modalFields, setModalFields] = useState({
+    openModal: false,
+    message: '',
+    title: '',
+  });
 
   const authContext = useContext(AuthCtx);
 
@@ -18,7 +25,22 @@ function WeatherDisplay(props: any) {
   async function getWeatherHandler(event: React.SyntheticEvent) {
     event.preventDefault();
     const weatherData = await getWeather(city, authContext?.token);
-    setWeather(weatherData);
+
+    // Not best way of doing this, should revamp how validations
+    // are done, come back if time permits
+    if (typeof weatherData === 'string') {
+      validateWeather();
+    } else {
+      setWeather(weatherData);
+    }
+  }
+
+  function validateWeather() {
+      setModalFields({
+        message: 'There was a problem getting the weather for your given city...',
+        title: 'Oops...',
+        openModal: true,
+      });
   }
 
   return (
@@ -34,6 +56,12 @@ function WeatherDisplay(props: any) {
           Get the weather!
         </button>
       </form>
+      <Modal
+        open={modalFields.openModal}
+        onClose={() => setModalFields(prevState => ({ ...prevState, openModal: false }))}
+        message={modalFields.message}
+        title={modalFields.title}
+      />
     </>
   );
 }
