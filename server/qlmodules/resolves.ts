@@ -41,7 +41,6 @@ const getWeatherData = async (city: string) => {
 }
 
 const addUser = async (username: string, password: string) => {
-  console.log('add user hit');
   const existingUser: [] = await new Promise((resolve, reject) => {
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
       if (err) reject(err);
@@ -67,7 +66,6 @@ const addUser = async (username: string, password: string) => {
 }
 
 const login = async (username: string, password: string, res: Response) => {
-  console.log('login hit');
   // In a larger project these should probably be kept in one place
 
   const foundUser: [UserData] = await new Promise((resolve, reject) => {

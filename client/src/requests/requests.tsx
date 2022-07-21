@@ -1,3 +1,40 @@
+function fetchData(query: any, errorMessage: string = '', isModifyToken: boolean = false, token: string = '') {
+    // This is awkward, will come back to if time permits
+    let headers;
+    if (token) {
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    } else {
+      headers = {
+        'Content-Type': 'application/json',
+      }
+    }
+
+  const options: RequestInit = {
+    method: 'POST',
+    body: JSON.stringify(query),
+    credentials: 'include',
+    headers: headers,
+  };
+
+  return fetch('http://localhost:8000/graphql', options).then(res => {
+    if (res.status !== 200 && res.status !== 201) {
+      if (isModifyToken) {
+        return {
+          userId: 0,
+          token: '',
+        }
+      } else {
+        throw new Error(errorMessage);
+      }
+    }
+
+    return res.json();
+  })
+}
+
 function register(username: string, password: string) {
   const query = {
     query: `
@@ -10,29 +47,16 @@ function register(username: string, password: string) {
     `
   }
 
-  //!!! Should be able to refactor the fetch out to its own function to be used
-  // for the others, check differences if time permits
-  return fetch('http://localhost:8000/graphql', {
-    method: 'POST',
-    body: JSON.stringify(query),
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  }).then(res => {
-    if (res.status !== 200 && res.status !== 201) {
-      throw new Error ('Unable to create user');
-    }
+  const errorMessage = 'Unable to create user';
 
-    return res.json();
-  }).then(data => {
+  return fetchData(query, errorMessage).then(data => {
     if (data.hasOwnProperty('errors')) {
       return data.errors[0].message;
     } else {
       return 'success';
     }
   }).catch(err => {
-    // !!! Come back to handle errors
-    console.log(err);
+    return errorMessage;
   });
 }
 
@@ -49,20 +73,9 @@ function login(username: string, password: string) {
     `
   }
 
-  return fetch('http://localhost:8000/graphql', {
-    method: 'POST',
-    body: JSON.stringify(query),
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  }).then(res => {
-    if (res.status !== 200 && res.status !== 201) {
-      throw new Error ('Unable to login');
-    }
+  const errorMessage = 'Unable to login';
 
-    return res.json();
-  }).then(data => {
+  return fetchData(query, errorMessage).then(data => {
     if (data.hasOwnProperty('errors')) {
       return data.errors[0].message;
     } else {
@@ -73,8 +86,7 @@ function login(username: string, password: string) {
       }
     }
   }).catch(err => {
-    // !!! Come back to handle errors
-    console.log(err);
+    return errorMessage;
   });
 }
 
@@ -90,27 +102,17 @@ function validateUser() {
       `
     }
 
-    return fetch('http://localhost:8000/graphql', {
-      method: 'POST',
-      body: JSON.stringify(query), 
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(res => {
-      if (res.status !== 200 && res.status !== 201) {
+    return fetchData(query, '', true).then(data => {
+      if (data.hasOwnProperty('errors')) {
         return {
           userId: 0,
           token: '',
         }
-      }
-
-      return res.json();
-    }).then(data => {
-      // Come back to handle errors here
-      return {
-        userId: data.data.validate.userId,
-        token: data.data.validate.token,
+      } else {
+        return {
+          userId: data.data.validate.userId,
+          token: data.data.validate.token,
+        }
       }
     }).catch(err => {
       return {
@@ -132,28 +134,20 @@ function logOut() {
     `
   }
 
-  return fetch('http://localhost:8000/graphql', {
-    method: 'POST',
-    body: JSON.stringify(query), 
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  }).then(res => {
-    if (res.status !== 200 && res.status !== 201) {
-      throw new Error('Unable to logout');
-    }
+  const errorMessage = 'Unable to logout';
 
-    return res.json();
-  }).then(data => {
-    // Come back to handle errors here
+  // Need to rethink this if time permits, because error or no error, we still
+  // reset the auth info, logging the user out, so all paths are essentially the same
+  return fetchData(query, errorMessage, true).then(data => {
     return {
       userId: 0,
       token: '',
     }
   }).catch(err => {
-    // Come back to handle errors
-    console.log(err);
+    return {
+      userId: 0,
+      token: '',
+    }
   });
 }
 
@@ -170,29 +164,16 @@ function getWeather(city: string, token: string | undefined) {
     `
   }
 
-  return fetch('http://localhost:8000/graphql', {
-    method: 'POST',
-    body: JSON.stringify(query), 
-    credentials: 'include',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  }).then(res => {
-    if (res.status !== 200 && res.status !== 201) {
-      throw new Error('Unable to get weather');
-    }
+  const errorMessage = 'Unable to get weather';
 
-    return res.json();
-  }).then(data => {
+  return fetchData(query, errorMessage, false, token).then(data => {
     if (data.hasOwnProperty('errors')) {
       return data.errors[0].message;
     } else {
       return data.data.weather;
     }
   }).catch(err => {
-    // Come back to handle errors
-    console.log(err);
+    return errorMessage;
   });
 }
 
