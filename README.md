@@ -35,6 +35,7 @@ Application includes basic registration, login and querying for weather informat
 
 * Step 1: Open two terminal window, on one of them, go to the client folder and run `npm start`. On the second terminal window, go to the server folder and run `npm run dev`
 * Step 2: Go to localhost:3000 to see the application, though it should already automatically pop up after running `npm start`
+* Step 3: Visit `http://localhost:8000/graphql` (Optional)
 
 ## Help
 
