@@ -18,8 +18,7 @@ Application includes basic registration, login and querying for weather informat
 
 * There are a number of dependencies and libraries which can all be found through `client/package.json` and `server/package.json`
 * Library usage was kept to a minimum to get things working.
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Tested on MacOS Monterey 12.1 and Mojave 10.14.6
 
 ### Installing
 
