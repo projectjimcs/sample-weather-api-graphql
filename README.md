@@ -12,7 +12,10 @@ Application includes basic registration, login and querying for weather informat
 * MySqL 8.0.27-arm64 was the version used on the development Mac. 8.0.18 was used for my older Mac on Mojave to ensure working.
 * Open weather API key required. Can be obtained free at [Open Weather API](https://openweathermap.org/api)
 * Node version 16.16.0+ required. An older version may work, but tested on 16.16.0 and 17.2.
-* Go into mysql on the command line (ex. `mysql -uroot -proot`). Then run `create database qlsample` and exit. 
+* Go into mysql on the command line (ex. `mysql -uroot -proot`). Then run: 
+```
+create database qlsample
+```
 
 ### Dependencies
 
@@ -22,24 +25,80 @@ Application includes basic registration, login and querying for weather informat
 
 ### Installing
 
-* Step 1: Clone the repository: `git clone git@github.com:projectjimcs/sample-weather-api-graphql.git` or `git clone https://github.com/projectjimcs/sample-weather-api-graphql.git`
-* Step 2: Go into the project directory: `cd sample-weather-api-graphql`
-* Step 3: Go into the client folder (`cd client`) and run `npm install`
-* Step 4: Go into the server folder (`cd server`) and run `npm install`
-* Step 5: In the server folder, create a new env file (`touch .env`) and copy the contents of `.env.example` over to it
-* Step 6: Open the env file and set the port to `8000`. The JWT_SECRET can be anything, DB_USER and DB_PASSWORD is whatever you inputted for your database and WEATHER_API_KEY is the key you got from the getting started section
-* Step 7: Go into the server folder and run migrations: `node node_modules/db-migrate/bin/db-migrate up`
 
+**Step 1**: Clone the repository:
+
+```
+git clone git@github.com:projectjimcs/sample-weather-api-graphql.git
+``` 
+or 
+
+```
+git clone https://github.com/projectjimcs/sample-weather-api-graphql.git
+```
+**Step 2**: Go into the project directory:
+
+```
+cd sample-weather-api-graphql
+```
+
+**Step 3**: Go into the client folder (`cd client`) and run: 
+
+```
+npm install
+```
+
+**Step 4**: Go into the server folder (`cd server`) and run:
+
+```
+npm install
+```
+
+**Step 5**: In the server folder, create a new env file (`touch .env`) and copy the contents of `.env.example` over to it
+Step 6: Open the env file and set the port to `8000`. The JWT_SECRET can be anything, DB_USER and DB_PASSWORD is whatever you inputted for your database and WEATHER_API_KEY is the key you got from the getting started section
+Step 7: Go into the server folder and run migrations: 
+
+```
+node node_modules/db-migrate/bin/db-migrate up
+```
 
 ### Executing program
 
-* Step 1: Open two terminal window, on one of them, go to the client folder and run `npm start`. On the second terminal window, go to the server folder and run `npm run dev`
-* Step 2: Go to localhost:3000 to see the application, though it should already automatically pop up after running `npm start`
-* Step 3: Visit `http://localhost:8000/graphql` (Optional)
+**Step 1**: Open two terminal window, on one of them, go to the client folder and run:
+
+```
+npm start
+```
+On the second terminal window, go to the server folder and run:
+
+```
+npm run dev
+```
+
+**Step 2**: Go to localhost:3000 to see the application, though it should already automatically pop up after running `npm start`
+**Step 3**: Visit `http://localhost:8000/graphql` (Optional)
 
 ## Help
 
-* A common issue that you run may into goes along the lines of `Client does not support authentication protocol requested by server` if this occurs, run the following in mysql: `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';` where root as your user localhost as your URL and password as your password. Then run `flush privileges;`
+A common issue that you run may into goes along the lines of:
+
+```
+Client does not support authentication protocol requested by server
+``` 
+
+if this occurs, run the following in mysql:
+
+```
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';`
+```
+
+Where root as your user localhost as your URL and password as your password. Then run:
+
+```
+flush privileges;
+```
+
+Another thing to check is node version which could cause issues, make sure the version is not from way back (`node -v`)
 
 ## Authors
 
