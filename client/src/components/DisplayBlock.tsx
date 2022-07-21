@@ -1,14 +1,16 @@
 import '../css/layout.css';
 import PropTypes from 'prop-types';
 import DefaultDisplay from './displays/DefaultDisplay';
-import RegisterDisplay from './displays/RegisterDisplay';
-import LoginDisplay from './displays/LoginDisplay';
+import AuthDisplay from './displays/AuthDisplay';
+import WeatherDisplay from './displays/WeatherDisplay';
 
 function DisplayBlock(props: any) {
+  // In case I want to add more displays here
   const displayMapping: any = {
-    default: <DefaultDisplay changeDisplay={props.changeDisplay} />,
-    register: <RegisterDisplay changeDisplay={props.changeDisplay} />,
-    login: <LoginDisplay changeDisplay={props.changeDisplay} />,
+    default: <DefaultDisplay changeDisplay={props.changeDisplay} display={props.display} />,
+    register: <AuthDisplay changeDisplay={props.changeDisplay} display={props.display} />,
+    login: <AuthDisplay changeDisplay={props.changeDisplay} display={props.display} />,
+    weather: <WeatherDisplay changeDisplay={props.changeDisplay} display={props.display} />,
   }
 
   return (

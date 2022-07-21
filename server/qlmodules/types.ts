@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt, GraphQLNonNull } from 'graphql';
-import { getWeatherData, addUser, login } from './resolves';
+import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt, GraphQLNonNull, GraphQLBoolean, validate } from 'graphql';
+import { getWeatherData, addUser, login, validateToken, logout } from './resolves';
 
 const WeatherType = new GraphQLObjectType({
   name: 'Weather',
@@ -30,6 +30,15 @@ const AuthDataType = new GraphQLObjectType({
   })
 });
 
+const ValidateTokenType = new GraphQLObjectType({
+  name: 'ValidateToken',
+  description: 'Boolean value to check token',
+  fields: () => ({
+    userId: { type: GraphQLInt },
+    token: { type: GraphQLString },
+  })
+});
+
 const RootQueryType = new GraphQLObjectType({
   name: 'Query',
   description: 'Root Query',
@@ -55,9 +64,16 @@ const RootQueryType = new GraphQLObjectType({
         username: { type: GraphQLNonNull(GraphQLString) },
         password: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve: (parent, args) => {
-        return login(args.username, args.password);
+      resolve: (parent, args, context) => {
+        return login(args.username, args.password, context.res);
       },
+    },
+    validate: {
+      type: ValidateTokenType,
+      description: 'Validating token being queries',
+      resolve: (parent, args, context) => {
+        return validateToken(context.req);
+      }
     }
   })
 });
@@ -75,6 +91,13 @@ const RootMutationType = new GraphQLObjectType({
       },
       resolve: (parent, args) => {
         return addUser(args.username, args.password);
+      }
+    },
+    logout: {
+      type: ValidateTokenType,
+      description: 'Logout user',
+      resolve: (parent, args, context) => {
+        return logout(context);
       }
     }
   })

@@ -22,6 +22,7 @@ function DefaultDisplay(props: any) {
 
 DefaultDisplay.propTypes = {
   changeDisplay: PropTypes.func.isRequired,
+  display: PropTypes.string.isRequired,
 };
 
 export default DefaultDisplay;

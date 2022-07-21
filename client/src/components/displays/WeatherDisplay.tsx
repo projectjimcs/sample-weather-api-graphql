@@ -1,26 +1,24 @@
 import '../../css/layout.css';
 import PropTypes from 'prop-types';
 
-function LoginDisplay(props: any) {
+function WeatherDisplay(props: any) {
   function buttonHandler(display: string) {
     props.changeDisplay(display);
   }
 
   return (
     <>
-      <span className="display-title-text">Login</span>
+      <span className="display-title-text">Weather Display</span>
       <button type="button" onClick={() => buttonHandler('register')}>
-        Login
-      </button>
-      <button type="button" onClick={() => buttonHandler('default')}>
-        Back
+        Get the weather!
       </button>
     </>
   );
 }
 
-LoginDisplay.propTypes = {
+WeatherDisplay.propTypes = {
   changeDisplay: PropTypes.func.isRequired,
+  display: PropTypes.string.isRequired,
 };
 
-export default LoginDisplay;
+export default WeatherDisplay;
