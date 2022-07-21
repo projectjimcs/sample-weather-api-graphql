@@ -151,9 +151,46 @@ function logOut() {
   });
 }
 
+function getWeather(city: string, token: string | undefined) {
+  const query = {
+    query: `
+      query {
+        weather(city: "${city}") {
+          shortDesc
+          description
+          temp
+        }
+      }
+    `
+  }
+
+  return fetch('http://localhost:8000/graphql', {
+    method: 'POST',
+    body: JSON.stringify(query), 
+    credentials: 'include',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  }).then(res => {
+    if (res.status !== 200 && res.status !== 201) {
+      throw new Error('Unable to get weather');
+    }
+
+    return res.json();
+  }).then(data => {
+    // Come back to handle errors here
+    return data.data.weather;
+  }).catch(err => {
+    // Come back to handle errors
+    console.log(err);
+  });
+}
+
 export {
   register,
   login,
   validateUser,
   logOut,
+  getWeather,
 };

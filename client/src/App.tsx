@@ -17,15 +17,15 @@ function App() {
 
   async function logout() {
     const logoutData: any = await logOut();
-    setToken(logoutData.userId);
-    setUserId(logoutData.token);
+    setToken(logoutData.token);
+    setUserId(logoutData.userId);
   }
 
   useEffect(() => {
     const validateLoggedIn = async () => {
       const data: any = await validateUser();
 
-      setToken(data.userId);
+      setToken(data.token);
       setUserId(data.userId);
     }
 

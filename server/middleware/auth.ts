@@ -7,7 +7,8 @@ const authentication = (req: Request, res: Response, next: NextFunction) => {
   interface DecodedToken {
     userId: string;
   }
-
+  console.log('in auth')
+  console.log(req.headers)
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
