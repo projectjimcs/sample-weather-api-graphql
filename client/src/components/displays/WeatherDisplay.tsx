@@ -28,9 +28,9 @@ function WeatherDisplay(props: any) {
         weather &&
         <WeatherInfoBlock weather={weather} />
       }
-      <form className='register-form' onSubmit={getWeatherHandler}>
-        <input id='weather-city' className='form-input' placeholder='City' name='city' type="text" value={city} onChange={handleCityChange} />
-        <button type="button">
+      <form className='weather-form' onSubmit={getWeatherHandler}>
+        <input id='weather-city' className='form-input' placeholder='Input your city' name='city' type="text" value={city} onChange={handleCityChange} />
+        <button className='regular-button' style={{width: '100%'}} type="button">
           Get the weather!
         </button>
       </form>

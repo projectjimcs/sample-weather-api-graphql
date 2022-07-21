@@ -41,13 +41,15 @@ function AuthDisplay(props: any) {
 
   return (
     <>
-      <span className="display-title-text">{props.display === 'login' ? 'Login' : 'Register'}</span>
+      <span className="display-title-text">{props.display === 'login' ? 'LOGIN' : 'REGISTRATION'}</span>
       <form className='register-form' onSubmit={submitForm}>
         {/* !!! come back to these on change handlers if time permits */}
-        <div><input id='username' className='form-input' placeholder='Username' name='username' type="text" value={formFields.username} onChange={handleFormChange} /></div>
-        <div><input id='password' className='form-input' placeholder='Password' name='password' type="password" value={formFields.password} onChange={handleFormChange} /></div>
-        <div><button className='form-button' type="submit">{props.display === 'login' ? 'Login' : 'Register'}</button></div>
-        <div><button className='form-button' type="button" onClick={() => buttonHandler('default')}>Back</button></div>
+        <input id='username' className='form-input' placeholder='Username' name='username' type="text" value={formFields.username} onChange={handleFormChange} />
+        <input id='password' className='form-input' placeholder='Password' name='password' type="password" value={formFields.password} onChange={handleFormChange} />
+        <div className='auth-button-block'>
+          <button className='form-button' type="submit">{props.display === 'login' ? 'Login' : 'Register'}</button>
+          <button className='form-button' type="button" onClick={() => buttonHandler('default')}>Back</button>
+        </div>
       </form>
 
     </>
