@@ -36,10 +36,6 @@ app.use('/graphql', graphqlHTTP((req, res) => {
   }
 }));
 
-app.get('/', async (req: Request, res: Response) => {
-  res.send('Hello World');
-});
-
 app.listen(port, () => {
   console.log(`Server is running at https://localhost:${port}`);
 });
