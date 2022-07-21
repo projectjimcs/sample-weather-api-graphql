@@ -66,8 +66,6 @@ const addUser = async (username: string, password: string) => {
 }
 
 const login = async (username: string, password: string, res: Response) => {
-  // In a larger project these should probably be kept in one place
-
   const foundUser: [UserData] = await new Promise((resolve, reject) => {
     connection.query('SELECT * FROM users WHERE username = ? LIMIT 1', [username], (err, results) => {
       if (err) reject(err);
