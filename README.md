@@ -55,8 +55,10 @@ npm install
 ```
 
 **Step 5**: In the server folder, create a new env file (`touch .env`) and copy the contents of `.env.example` over to it
-Step 6: Open the env file and set the port to `8000`. The JWT_SECRET can be anything, DB_USER and DB_PASSWORD is whatever you inputted for your database and WEATHER_API_KEY is the key you got from the getting started section
-Step 7: Go into the server folder and run migrations: 
+
+**Step 6**: Open the env file and set the port to `8000`. The JWT_SECRET can be anything, DB_USER and DB_PASSWORD is whatever you inputted for your database and WEATHER_API_KEY is the key you got from the getting started section
+
+**Step 7**: Go into the server folder and run migrations: 
 
 ```
 node node_modules/db-migrate/bin/db-migrate up
