@@ -7,7 +7,6 @@ function Content() {
   const [displayState, setDisplayState] = useState('default');
   const authContext = useContext(AuthCtx);
 
-  // !!! Might put this up to the App.tsx level
   function changeDisplay(state: string) {
     setDisplayState(state);
   }
