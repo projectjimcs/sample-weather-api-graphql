@@ -7,7 +7,7 @@ function Header() {
 
   return (
     <div className='header'>
-      <span><strong>WEATHERING APP</strong></span>
+      <span><strong>WEATHERING</strong></span>
       {
         authContext?.token &&
         <button className='logout-button' type='button' onClick={authContext?.logout}>

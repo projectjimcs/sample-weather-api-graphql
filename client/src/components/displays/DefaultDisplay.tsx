@@ -10,11 +10,11 @@ function DefaultDisplay(props: any) {
   return (
     <>
       <img src='/images/main-weather.png' />
-      <span className="display-title-text">Only logged in users are allowed in</span>
-      <button className='form-button' type="button" onClick={() => buttonHandler('register')}>
+      <span className="main-title-text">Log in to see get the weather!</span>
+      <button className='regular-button' type="button" onClick={() => buttonHandler('register')}>
         Register
       </button>
-      <button className='form-button' type="button" onClick={() => buttonHandler('login')}>
+      <button className='regular-button' type="button" onClick={() => buttonHandler('login')}>
         Login
       </button>
     </>
