@@ -1,17 +1,39 @@
 import '../../css/layout.css';
 import PropTypes from 'prop-types';
+import AuthCtx from '../../context/auth-context';
+import { useState, useContext } from 'react';
+import { getWeather } from '../../requests/requests';
+import WeatherInfoBlock from '../WeatherInfoBlock';
 
 function WeatherDisplay(props: any) {
-  function buttonHandler(display: string) {
-    props.changeDisplay(display);
+  const [city, setCity] = useState('');
+  const [weather, setWeather] = useState(null)
+
+  const authContext = useContext(AuthCtx);
+
+  function handleCityChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setCity(event.target.value);
+  }
+
+  async function getWeatherHandler(event: React.SyntheticEvent) {
+    event.preventDefault();
+    const weatherData = await getWeather(city, authContext?.token);
+    setWeather(weatherData);
   }
 
   return (
     <>
       <span className="display-title-text">Weather Display</span>
-      <button type="button" onClick={() => buttonHandler('register')}>
-        Get the weather!
-      </button>
+      {
+        weather &&
+        <WeatherInfoBlock weather={weather} />
+      }
+      <form className='register-form' onSubmit={getWeatherHandler}>
+        <input id='weather-city' className='form-input' placeholder='City' name='city' type="text" value={city} onChange={handleCityChange} />
+        <button type="button">
+          Get the weather!
+        </button>
+      </form>
     </>
   );
 }
