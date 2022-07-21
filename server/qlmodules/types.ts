@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt, GraphQLNonNull, GraphQLBoolean, validate } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLInt, GraphQLNonNull } from 'graphql';
 import { getWeatherData, addUser, login, validateToken, logout } from './resolves';
 
 const WeatherType = new GraphQLObjectType({
