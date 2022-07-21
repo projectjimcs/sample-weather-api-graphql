@@ -1,9 +1,19 @@
 import '../css/layout.css';
+import { useContext } from 'react';
+import AuthCtx from '../context/auth-context';
 
 function Header() {
+  const authContext = useContext(AuthCtx);
+
   return (
     <div className='header'>
-      <strong>WEATHERING APP</strong>
+      <span><strong>WEATHERING APP</strong></span>
+      {
+        authContext?.token &&
+        <button className='logout-button' type='button' onClick={authContext?.logout}>
+          Logout
+        </button>
+      }
     </div>
   );
 }

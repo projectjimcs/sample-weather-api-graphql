@@ -5,6 +5,18 @@ import { connection } from '../config/dbconfig';
 import { OkPacket } from 'mysql';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../global';
+import { Request, Response } from 'express';
+
+interface UserData {
+  id: number;
+  username: string;
+  password: string;
+}
+
+interface DecodedToken {
+  userId: string;
+  token: string,
+}
 
 // !!! Good idea here to separate/group the resolves into their own folder
 const getWeatherData = async (city: string) => {
@@ -29,7 +41,7 @@ const getWeatherData = async (city: string) => {
 }
 
 const addUser = async (username: string, password: string) => {
-  console.log('in adduser');
+  console.log('add user hit');
   const existingUser: [] = await new Promise((resolve, reject) => {
     connection.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
       if (err) reject(err);
@@ -54,13 +66,9 @@ const addUser = async (username: string, password: string) => {
   }
 }
 
-const login = async (username: string, password: string) => {
+const login = async (username: string, password: string, res: Response) => {
+  console.log('login hit');
   // In a larger project these should probably be kept in one place
-  interface UserData {
-    id: number;
-    username: string;
-    password: string;
-  }
 
   const foundUser: [UserData] = await new Promise((resolve, reject) => {
     connection.query('SELECT * FROM users WHERE username = ? LIMIT 1', [username], (err, results) => {
@@ -83,6 +91,8 @@ const login = async (username: string, password: string) => {
     expiresIn: '1h',
   });
 
+  res.cookie('token', token, {httpOnly: true});
+
   return {
     userId: foundUser[0].id,
     token: token,
@@ -90,8 +100,51 @@ const login = async (username: string, password: string) => {
   }
 }
 
+const validateToken = async (req: Request) => {
+  const token = req.headers.cookie?.split('=')[1];
+
+  if (!token) {
+    throw new Error('Not signed in');
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
+
+    const foundUser: [UserData] = await new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM users WHERE id = ? LIMIT 1', [decodedToken.userId], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    if (!foundUser.length) {
+      throw new Error('No user found');
+    }
+
+    return {
+      userId: decodedToken.userId,
+      token: token,
+    }
+  } catch (err) {
+    throw new Error('Not signed in');
+  }
+}
+
+const logout = (context: any) => {
+  context.res.clearCookie('token');
+  context.req.session.destroy();
+
+  return {
+    // Might be a good idea to const the "default" userId
+    userId: 0,
+    token: '',
+  }
+}
+
 export {
   getWeatherData,
   addUser,
   login,
+  validateToken,
+  logout,
 }
